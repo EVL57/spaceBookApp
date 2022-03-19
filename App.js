@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import LoginScreen from './components/login';
-import FeedScreen from './components/feed';
-import SignupScreen from './components/signup';
+import LoginScreen from './screens/login';
+import HomeScreen from './screens/home';
+import PatchUser from './screens/patchUser';
+import SearchScreen from './screens/search';
+import SignupScreen from './screens/signup';
+import LogoutScreen from './screens/logout';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -16,8 +19,11 @@ class App extends Component {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Login" component={LoginScreen} />
-          <Tab.Screen name="Feed" component={FeedScreen} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Search" component={SearchScreen} />
+          <Tab.Screen name="Edit" component={PatchUser} />
           <Tab.Screen name="Signup" component={SignupScreen} />
+          <Tab.Screen name="Logout" component={LogoutScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     );
