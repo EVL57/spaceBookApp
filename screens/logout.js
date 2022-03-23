@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Text, ScrollView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class HomeScreen extends Component{
-    constructor(props){
+class HomeScreen extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -11,54 +11,54 @@ class HomeScreen extends Component{
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
-        });        
+        });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._unsubscribe();
     }
 
     checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@spacebook_details');
-        if(value !== null) {
-          this.setState({token:value});
-        }else{
+        const authToken = await AsyncStorage.getItem('@spacebook_details');
+        if (authToken !== null) {
+            this.setState({ token: authToken });
+        } else {
             this.props.navigation.navigate("Login");
         }
     }
 
     logout = async () => {
-        let token = await AsyncStorage.getItem('@spacebook_details');
+        //logout 
+        let authtoken = await AsyncStorage.getItem('@spacebook_details');
         await AsyncStorage.removeItem('@spacebook_details');
         return fetch("http://localhost:3333/api/1.0.0/logout", {
             method: 'post',
             headers: {
-                "X-Authorization": token
+                "X-Authorization": authtoken
             }
         })
-        .then((response) => {
-            if(response.status === 200){
-                this.props.navigation.navigate("Login");
-            }else if(response.status === 401){
-                this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        })
+            .then((response) => {
+                if (response.status === 200) {
+                    this.props.navigation.navigate("Login");
+                } else if (response.status === 401) {
+                    throw 'Unauthorised';
+                } else {
+                    throw 'Server Error';
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
-    render(){
+    render() {
         return (
             <ScrollView>
-                <Text style={{fontSize:24, fontWeight:'bold', padding:5, margin:5}}>Are you sure, you want to sign out from Spacebook?</Text>
-                <Text style={{fontSize:24, padding:5, margin:5}}>There's always more things to do within Spacebook.</Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', padding: 5, margin: 5 }}>Are you sure, you want to sign out from Spacebook?</Text>
+                <Text style={{ fontSize: 24, fontWieght: 'bold', padding: 5, margin: 5 }}>There's always more things to do within Spacebook.</Text>
                 <Button
                     title="Logout"
                     onPress={() => this.logout()}
